@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+    <head>
+        <link href='style.css' rel='stylesheet' type='text/css' />
+        <title>Interaktywna tablica</title>
+    </head>
+    <body>
+        <div id='box'>
+        </div>
+        
+        <div id='bg'>
+            Interaktywna tablica v1.0<br />
+            Strona wykonana przez <font color='#00ee00'>Jakuba Kulwickiego</font>
+        </div>
+        
+        <div id='adn'>
+            <center><textarea id='adn_textarea' style='width: 600px; height: 200px' placeholder='Wpisz adnotację...'></textarea></center>
+            <div id='buttons'>
+                <div id='button'>Dodaj</div><div id='button'>Anuluj</div>
+            </div>
+        </div>
+        
+        <div id='save'>Pozycja i wymiary zostały zapisane</div>
+        
+        <div id='panel'>
+            <div id='buttons'>
+                <div id='button1'>Dodaj adnotację</div>
+                <div id='button2'>Wrzuć plik</div>
+                <div id='button3'>Usuń</div>
+            </div>
+            <input style='display: none' type="file" id="siofu_input" />
+        </div>
+        
+        <!---->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+          <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+          <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            //images.0
+            socket.on('images', function(data) {
+                $('.resiz').resizable('destroy');
+                document.getElementById('box').innerHTML += data;
+                setTimeout(function() {
+                    $.getScript('/socket.io/socket.io.js', function(data, textStatus, jqxhr) {
+                    });
+                    $.getScript('scripts.js', function(data, textStatus, jqxhr) {
+                    });
+                $('.resiz').resizable({
+                    aspectRatio: true
+                });
+                }, 500);
+            });
+            //images.1
+            
+            //position.0
+            socket.on('position set', function(data) {
+                $('.resiz').resizable('destroy');
+                var div = '.dragg:nth-child(' + data.id + ')';
+                var div_del = '.del:nth-child(' + data.id + ')';
+                var div2 = '#' + (data.id - 1);
+                $(div).css({
+                    "left": data.pos_x,
+                    "top": data.pos_y
+                });
+                //$(div_del).css({
+                //    "left": data.pos_x - 10,
+                //    "top": data.pos_y - 10
+                //});
+                $(div2).css({
+                    "height": data.height,
+                    "width": data.width
+                });
+                $('.resiz').resizable({
+                    aspectRatio: true
+                });
+            });
+            //position.1
+            
+            //delete.0
+            socket.on('delete to client', function(data) {
+                //document.getElementById('box').innerHTML += data;
+                console.log('client');
+            });
+            
+            socket.on('delete hide', function(data) {
+                console.log(':)');
+                var div = '#' + data;
+                console.log(div);
+                $(div).css({'display': 'none'});
+                $(div).remove();
+                var div2 = '#del' + data;
+                $(div2).remove();
+            });
+            //delete.1
+        </script>
+        <!---->
+
+        <!---->
+        <script src="/siofu/client.js"></script>
+        <script>
+            var uploader = new SocketIOFileUpload(socket);
+            uploader.listenOnInput(document.getElementById("siofu_input"));
+        </script>
+        <!---->
+        
+        <script src="index.js"></script>
+    </body>
+</html>

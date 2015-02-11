@@ -1,0 +1,19 @@
+{
+  "name": "app",
+  "main": "index.js",
+  "version": "0.0.0",
+  "authors": [
+    "jakubkulwicki <s10695@pjwstk.edu.pl>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3"
+  }
+}
